@@ -177,7 +177,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
      */
     @Override
     public void removeNode(int i) {
-        if (this.nodesIndex.containsValue(i)) {
+        if (nodesIndex.containsValue(i) && i < this.nodeCount() - 1) {
             removeNode(new GraphNode(i));
             /* int index = nodesIndex.get(i);
             this.nodesIndex.remove(i);
@@ -215,8 +215,8 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public GraphNode<L> getNode(int i) {
-        if (!nodesIndex.containsValue(i)) {
-            throw new IndexOutOfBoundsException("L'indice passato non corrisponde a nessun nodo o è fuori dai limiti dell'intevallo");
+        if (!nodesIndex.containsValue(i) || i > this.nodeCount() - 1) {
+            throw new IndexOutOfBoundsException("L'indice passato non esiste nel grafo o è fuori dai limiti dell'intervallo");
         }
         return getNode(new GraphNode(i));
     }
@@ -319,21 +319,23 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public boolean addEdge(int i, int j) {
-        if (!nodesIndex.containsValue(i) || !nodesIndex.containsValue(j)) {
-            throw new IndexOutOfBoundsException("Almeno uno degli indici passati non corrisponde a nessun nodo o è fuori dai limiti dell'intervallo");
-        }
+        //noinspection DuplicatedCode
         GraphNode<L> node1 = getNode(i);
         GraphNode<L> node2 = getNode(j);
+        if (!nodesIndex.containsValue(i) || !nodesIndex.containsValue(j) || i > this.nodeCount() - 1 || j > this.nodeCount() - 1) {
+            throw new IndexOutOfBoundsException("L'indice passato non esiste nel grafo o è fuori dai limiti dell'intervallo");
+        }
         return addEdge(new GraphEdge<>(node1, node2, true));
     }
 
     @Override
     public boolean addWeightedEdge(int i, int j, double weight) {
-        if (!nodesIndex.containsValue(i) || !nodesIndex.containsValue(j)) {
-            throw new IndexOutOfBoundsException("Almeno uno degli indici passati non corrisponde a nessun nodo o è fuori dai limiti dell'intervallo");
-        }
+        //noinspection DuplicatedCode
         GraphNode<L> node1 = getNode(i);
         GraphNode<L> node2 = getNode(j);
+        if (!nodesIndex.containsValue(i) || !nodesIndex.containsValue(j) || i > this.nodeCount() - 1 || j > this.nodeCount() - 1) {
+            throw new IndexOutOfBoundsException("L'indice passato non esiste nel grafo o è fuori dai limiti dell'intervallo");
+        }
         return addWeightedEdge(node1, node2, weight);
     }
 
@@ -360,7 +362,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
         if (node1 == null || node2 == null) {
             throw new NullPointerException("Almeno uno dei due nodi passati è nullo");
         }
-        removeEdge(new GraphEdge<L>(node1, node2, true));
+        removeEdge(new GraphEdge<>(node1, node2, true));
     }
 
     @Override
@@ -373,79 +375,156 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
         if (!nodesIndex.containsKey(nodo1) || !nodesIndex.containsKey(nodo2)) {
             throw new IllegalArgumentException("Almeno una delle due etichette non esiste nel grafo");
         }
-        removeEdge(new GraphEdge<L>(nodo1, nodo2, true));
+        removeEdge(new GraphEdge<>(nodo1, nodo2, true));
     }
 
     @Override
     public void removeEdge(int i, int j) {
-        // TODO implementare
+        //noinspection DuplicatedCode
         GraphNode<L> nodo1 = getNode(i);
         GraphNode<L> nodo2 = getNode(j);
-        if (!nodesIndex.containsValue(i) || !nodesIndex.containsValue(j)) {
-            throw new IndexOutOfBoundsException("Almeno una delle due etichette non esiste nel grafo");
+        if (!nodesIndex.containsValue(i) || !nodesIndex.containsValue(j) || i > this.nodeCount() - 1 || j > this.nodeCount() - 1) {
+            throw new IndexOutOfBoundsException("L'indice passato non esiste nel grafo o è fuori dai limiti dell'intervallo");
         }
-        removeEdge(new GraphEdge<L>(nodo1, nodo2, true));
+        removeEdge(new GraphEdge<>(nodo1, nodo2, true));
     }
 
 
     @Override
     public GraphEdge<L> getEdge(GraphEdge<L> edge) {
-        // TODO implementare
+        if (edge == null) {
+            throw new NullPointerException("L'arco passato è nullo");
+        }
+        GraphNode<L> nodo1 = edge.getNode1();
+        GraphNode<L> nodo2 = edge.getNode2();
+        if (!nodesIndex.containsKey(nodo1) || !nodesIndex.containsKey(nodo2)) {
+            throw new IllegalArgumentException("Almeno uno dei due nodi dell'arco passato non esiste nel grafo");
+        }
+        int indice = nodesIndex.get(nodo1);
+        ArrayList<GraphEdge<L>> listaArchi = matrix.get(indice);
+        for (GraphEdge<L> arco : listaArchi) {
+            if (arco.equals(edge)) {
+                return arco;
+            }
+        }
+        //Null se l'arco non esiste
         return null;
     }
 
     @Override
     public GraphEdge<L> getEdge(GraphNode<L> node1, GraphNode<L> node2) {
-        // TODO implementare
-        return null;
+        if (node1 == null || node2 == null) {
+            throw new NullPointerException("Almeno uno dei due nodi passati è null");
+        }
+        return getEdge(new GraphEdge<>(node1, node2, true));
     }
 
     @Override
     public GraphEdge<L> getEdge(L label1, L label2) {
-        // TODO implementare
-        return null;
+        if (label1 == null || label2 == null) {
+            throw new NullPointerException("Almeno una delle due etichette è null");
+        }
+        GraphNode<L> nodo1 = getNode(label1);
+        GraphNode<L> nodo2 = getNode(label2);
+        return getEdge(new GraphEdge<>(nodo1, nodo2, true));
     }
 
     @Override
     public GraphEdge<L> getEdge(int i, int j) {
-        // TODO implementare
-        return null;
+        //noinspection DuplicatedCode
+        GraphNode<L> nodo1 = getNode(i);
+        GraphNode<L> nodo2 = getNode(j);
+        if (!nodesIndex.containsValue(i) || !nodesIndex.containsValue(j) || i > this.nodeCount() - 1 || j > this.nodeCount() - 1) {
+            throw new IndexOutOfBoundsException("L'indice passato non esiste nel grafo o è fuori dai limiti dell'intervallo");
+        }
+
+        return getEdge(new GraphEdge<>(nodo1, nodo2, true));
     }
 
     @Override
     public Set<GraphNode<L>> getAdjacentNodesOf(GraphNode<L> node) {
-        // TODO implementare
+        if (!nodesIndex.containsKey(node)) {
+            throw new IllegalArgumentException("Il nodo passato non esiste");
+        }
+        if (node == null) {
+            throw new NullPointerException("Il nodo passato è nullo");
+        }
+        Set<GraphNode<L>> listaNodi = nodesIndex.keySet();
+        Set<GraphNode<L>> risultato = new HashSet<>();
+        for (GraphNode<L> nodo : listaNodi) {
+            if (node.getPrevious() == nodo || nodo.getPrevious() == node) {
+                risultato.add(nodo);
+            }
+            return risultato;
+        }
+        //Null se non esistono nodi adiacenti
         return null;
     }
 
     @Override
     public Set<GraphNode<L>> getAdjacentNodesOf(L label) {
-        // TODO implementare
-        return null;
+        if (label == null) {
+            throw new NullPointerException("L'etichetta passata è null");
+        }
+        GraphNode<L> nodo = getNode(label);
+        if (!nodesIndex.containsKey(nodo)) {
+            throw new IllegalArgumentException("L'etichetta passata non esiste in nessun nodo di questo grafo");
+        }
+
+        return getAdjacentNodesOf(new GraphNode<>(label));
     }
 
     @Override
     public Set<GraphNode<L>> getAdjacentNodesOf(int i) {
-        // TODO implementare
-        return null;
+        //noinspection DuplicatedCode
+        GraphNode<L> nodo1 = getNode(i);
+        if (!nodesIndex.containsValue(i) || i > this.nodeCount() - 1) {
+            throw new IndexOutOfBoundsException("L'indice passato non esiste nel grafo o è fuori dai limiti dell'intervallo");
+        }
+        return getAdjacentNodesOf(nodo1);
     }
 
     @Override
     public Set<GraphNode<L>> getPredecessorNodesOf(GraphNode<L> node) {
-        // TODO implementare
+        if (!nodesIndex.containsKey(node)) {
+            throw new IllegalArgumentException("Il nodo passato non esiste");
+        }
+        if (node == null) {
+            throw new NullPointerException("Il nodo passato è nullo");
+        }
+        Set<GraphNode<L>> listaNodi = nodesIndex.keySet();
+        Set<GraphNode<L>> risultato = new HashSet<>();
+        for (GraphNode<L> nodo : listaNodi) {
+            if (node.getPrevious() == nodo) {
+                risultato.add(nodo);
+            }
+            return risultato;
+        }
+        //Null se non esistono nodi adiacenti
         return null;
     }
 
     @Override
     public Set<GraphNode<L>> getPredecessorNodesOf(L label) {
-        // TODO implementare
-        return null;
+        if (label == null) {
+            throw new NullPointerException("L'etichetta passata è null");
+        }
+        GraphNode<L> nodo = getNode(label);
+        if (!nodesIndex.containsKey(nodo)) {
+            throw new IllegalArgumentException("L'etichetta passata non esiste in nessun nodo di questo grafo");
+        }
+
+        return getPredecessorNodesOf(new GraphNode<>(label));
     }
 
     @Override
     public Set<GraphNode<L>> getPredecessorNodesOf(int i) {
-        // TODO implementare
-        return null;
+        //noinspection DuplicatedCode
+        GraphNode<L> nodo1 = getNode(i);
+        if (!nodesIndex.containsValue(i) || i > this.nodeCount() - 1) {
+            throw new IndexOutOfBoundsException("L'indice passato non esiste nel grafo o è fuori dai limiti dell'intervallo");
+        }
+        return getPredecessorNodesOf(nodo1);
     }
 
     @Override

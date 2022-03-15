@@ -530,6 +530,20 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
     @Override
     public Set<GraphEdge<L>> getEdgesOf(GraphNode<L> node) {
         // TODO implementare
+        if (node == null) {
+            throw new NullPointerException("Il nodo passato è null");
+        }
+        if (!nodesIndex.containsKey(node)) {
+            throw new IllegalArgumentException("Il nodo passato non esiste");
+        }
+        Set<GraphNode<L>> listaNodi = nodesIndex.keySet();
+        Set<GraphEdge<L>> insiemeArchi = new HashSet<>();
+        for (GraphNode<L> nodo : listaNodi) {
+            if (nodo.getPrevious() == node) {
+                insiemeArchi = getEdge(nodo, node);
+            }
+            return insiemeArchi;
+        }
         return null;
     }
 

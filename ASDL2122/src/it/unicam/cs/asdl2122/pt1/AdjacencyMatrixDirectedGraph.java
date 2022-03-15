@@ -543,7 +543,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
                 listaArchi.add(matrix.get(indiceNodo).get(i));
             }
         }
-        return null;
+        return listaArchi;
     }
 
     @Override

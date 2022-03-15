@@ -3,6 +3,7 @@
  */
 package it.unicam.cs.asdl2122.pt1;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 // TODO completare gli import necessari
@@ -529,20 +530,18 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public Set<GraphEdge<L>> getEdgesOf(GraphNode<L> node) {
-        // TODO implementare
         if (node == null) {
             throw new NullPointerException("Il nodo passato è null");
         }
         if (!nodesIndex.containsKey(node)) {
             throw new IllegalArgumentException("Il nodo passato non esiste");
         }
-        Set<GraphNode<L>> listaNodi = nodesIndex.keySet();
-        Set<GraphEdge<L>> insiemeArchi = new HashSet<>();
-        for (GraphNode<L> nodo : listaNodi) {
-            if (nodo.getPrevious() == node) {
-                insiemeArchi = getEdge(nodo, node);
+        int indiceNodo = nodesIndex.get(node);
+        Set<GraphEdge<L>> listaArchi = new HashSet<>();
+        for (int i = 0; i < matrix.get(indiceNodo).size(); i++) {
+            if (matrix.get(indiceNodo).get(i) != null) {
+                listaArchi.add(matrix.get(indiceNodo).get(i));
             }
-            return insiemeArchi;
         }
         return null;
     }

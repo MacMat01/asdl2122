@@ -538,9 +538,9 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
         }
         int indiceNodo = nodesIndex.get(node);
         Set<GraphEdge<L>> listaArchi = new HashSet<>();
-        for (int i = 0; i < matrix.get(indiceNodo).size(); i++) {
-            if (matrix.get(indiceNodo).get(i) != null) {
-                listaArchi.add(matrix.get(indiceNodo).get(i));
+        for (GraphEdge<L> arco : matrix.get(indiceNodo)) {
+            if (arco != null) {
+                listaArchi.add(arco);
             }
         }
         return listaArchi;
@@ -548,37 +548,65 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public Set<GraphEdge<L>> getEdgesOf(L label) {
-        // TODO implementare
-        return null;
+        if (label == null) {
+            throw new NullPointerException("L'etichetta passata è null");
+        }
+        return getEdgesOf(new GraphNode<>(label));
     }
 
     @Override
     public Set<GraphEdge<L>> getEdgesOf(int i) {
-        // TODO implementare
-        return null;
+        if (!nodesIndex.containsValue(i) || i > this.nodeCount() - 1) {
+            throw new IndexOutOfBoundsException("L'indice passato non esiste nel grafo o è fuori dai limiti dell'intervallo");
+        }
+        GraphNode<L> nodo = getNode(i);
+        return getEdgesOf(nodo);
     }
 
     @Override
     public Set<GraphEdge<L>> getIngoingEdgesOf(GraphNode<L> node) {
-        // TODO implementare
-        return null;
+        if (node == null) {
+            throw new NullPointerException("Il nodo passato è null");
+        }
+        if (!nodesIndex.containsKey(node)) {
+            throw new IllegalArgumentException("Il nodo passato non esiste");
+        }
+        Set<GraphEdge<L>> archiEntranti = new HashSet<>();
+        for (GraphNode<L> nodoPrecedente : nodesIndex.keySet()) {
+            if (nodoPrecedente == node.getPrevious()) {
+                archiEntranti.add(getEdge(nodoPrecedente, node));
+            }
+        }
+        return archiEntranti;
     }
 
     @Override
     public Set<GraphEdge<L>> getIngoingEdgesOf(L label) {
-        // TODO implementare
-        return null;
+        if (label == null) {
+            throw new NullPointerException("L'etichetta passata è null");
+        }
+        return getIngoingEdgesOf(new GraphNode<>(label));
     }
 
     @Override
     public Set<GraphEdge<L>> getIngoingEdgesOf(int i) {
-        // TODO implementare
-        return null;
+        if (!nodesIndex.containsValue(i) || i > this.nodeCount() - 1) {
+            throw new IndexOutOfBoundsException("L'indice passato non esiste nel grafo o è fuori dai limiti dell'intervallo");
+        }
+        GraphNode<L> nodo = getNode(i);
+        return getIngoingEdgesOf(nodo);
     }
 
     @Override
     public Set<GraphEdge<L>> getEdges() {
-        // TODO implementare
-        return null;
+        Set<GraphEdge<L>> insiemeArchi = new HashSet<>();
+        for (int i = 0; i < matrix.size(); i++) {
+            for (int j = 0; j < matrix.get(i).size(); i++) {
+                if (matrix.get(i).get(j) != null) {
+                    insiemeArchi.add(matrix.get(i).get(j));
+                }
+            }
+        }
+        return insiemeArchi;
     }
 }

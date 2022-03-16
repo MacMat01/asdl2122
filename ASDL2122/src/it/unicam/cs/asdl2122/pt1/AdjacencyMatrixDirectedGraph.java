@@ -78,11 +78,15 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public int edgeCount() {
-        int contatore = 0;
-        for (ArrayList<GraphEdge<L>> graphEdges : matrix) {
-            contatore += graphEdges.size();
+        int numeroArchi = 0;
+        for (int i = 0; i < matrix.size(); i++) {
+            for (int j = 0; j < matrix.get(i).size(); i++) {
+                if (matrix.get(i).get(j) != null) {
+                    numeroArchi++;
+                }
+            }
         }
-        return contatore;
+        return numeroArchi;
     }
 
     @Override
@@ -219,7 +223,14 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
         if (!nodesIndex.containsValue(i) || i > this.nodeCount() - 1) {
             throw new IndexOutOfBoundsException("L'indice passato non esiste nel grafo o è fuori dai limiti dell'intervallo");
         }
-        return getNode(new GraphNode(i));
+        Set<GraphNode<L>> insiemeNodi = nodesIndex.keySet();
+        for (GraphNode<L> nodo : insiemeNodi) {
+            if (nodesIndex.get(nodo) == i) {
+                return getNode(nodo);
+            }
+        }
+        // null se il nodo non esiste
+        return null;
     }
 
     @Override
@@ -269,8 +280,9 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
         ArrayList<GraphEdge<L>> listaArchi = matrix.get(indice);
         if (listaArchi.contains(edge)) {
             return false;
+        } else {
+            listaArchi.set(indice2, edge);
         }
-        listaArchi.set(indice2, edge);
         return true;
     }
 

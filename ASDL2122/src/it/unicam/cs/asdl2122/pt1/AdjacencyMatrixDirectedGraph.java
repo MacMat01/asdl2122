@@ -46,7 +46,6 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
      * il JUnit testing
      */
 
-    protected static int indexNode = 0;
 
     /*
      * Insieme dei nodi e associazione di ogni nodo con il proprio indice nella
@@ -80,7 +79,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
     public int edgeCount() {
         int numeroArchi = 0;
         for (int i = 0; i < matrix.size(); i++) {
-            for (int j = 0; j < matrix.get(i).size(); i++) {
+            for (int j = 0; j < matrix.get(i).size(); j++) {
                 if (matrix.get(i).get(j) != null) {
                     numeroArchi++;
                 }
@@ -115,7 +114,15 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
             return false;
         }
         //Inserisco il nodo
-        this.nodesIndex.put(node, indexNode++);
+        ArrayList<GraphEdge<L>> riga = new ArrayList<>();
+        matrix.add(riga);
+        for (int i = 0; i < nodeCount(); i++) {
+            riga.add(null);
+        }
+        for (ArrayList<GraphEdge<L>> riga2 : matrix) {
+            riga2.add(null);
+        }
+        this.nodesIndex.put(node, nodesIndex.size());
         return true;
     }
 
@@ -143,9 +150,12 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
             this.nodesIndex.remove(node);
             this.matrix.remove(indice);
             for (ArrayList<GraphEdge<L>> listaArchi : matrix) {
-                for (GraphEdge<L> arco : listaArchi) {
-                    if (arco.getNode1().equals(node) || arco.getNode2().equals(node)) {
-                        listaArchi.remove(arco);
+                Iterator<GraphEdge<L>> iterator = listaArchi.iterator();
+                //noinspection Java8CollectionRemoveIf
+                while (iterator.hasNext()) {
+                    GraphEdge<L> arco = iterator.next();
+                    if (arco != null && (arco.getNode1().equals(node) || arco.getNode2().equals(node))) {
+                        iterator.remove();
                     }
                 }
             }
@@ -182,18 +192,8 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
      */
     @Override
     public void removeNode(int i) {
-        if (nodesIndex.containsValue(i) && i < this.nodeCount() - 1) {
-            removeNode(new GraphNode(i));
-            /* int index = nodesIndex.get(i);
-            this.nodesIndex.remove(i);
-            this.matrix.remove(index);
-            for (ArrayList<GraphEdge<L>> listaArchi : matrix) {
-                for (GraphEdge<L> arco : listaArchi) {
-                    if (arco.getNode1().equals(i) || arco.getNode2().equals(i)) {
-                        listaArchi.remove(arco);
-                    }
-                }
-            } */
+        if (i >= 0 && i < this.nodeCount() && nodesIndex.containsValue(i)) {
+            removeNode(getNode(i));
         } else
             throw new IndexOutOfBoundsException("L'indice passato non corrisponde a nessun nodo o è fuori dai limiti dell'intervallo");
     }
@@ -220,7 +220,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public GraphNode<L> getNode(int i) {
-        if (!nodesIndex.containsValue(i) || i > this.nodeCount() - 1) {
+        if (i < 0 || i > this.nodeCount() || !nodesIndex.containsValue(i)) {
             throw new IndexOutOfBoundsException("L'indice passato non esiste nel grafo o è fuori dai limiti dell'intervallo");
         }
         Set<GraphNode<L>> insiemeNodi = nodesIndex.keySet();
@@ -332,23 +332,15 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public boolean addEdge(int i, int j) {
-        //noinspection DuplicatedCode
         GraphNode<L> node1 = getNode(i);
         GraphNode<L> node2 = getNode(j);
-        if (!nodesIndex.containsValue(i) || !nodesIndex.containsValue(j) || i > this.nodeCount() - 1 || j > this.nodeCount() - 1) {
-            throw new IndexOutOfBoundsException("L'indice passato non esiste nel grafo o è fuori dai limiti dell'intervallo");
-        }
         return addEdge(new GraphEdge<>(node1, node2, true));
     }
 
     @Override
     public boolean addWeightedEdge(int i, int j, double weight) {
-        //noinspection DuplicatedCode
         GraphNode<L> node1 = getNode(i);
         GraphNode<L> node2 = getNode(j);
-        if (!nodesIndex.containsValue(i) || !nodesIndex.containsValue(j) || i > this.nodeCount() - 1 || j > this.nodeCount() - 1) {
-            throw new IndexOutOfBoundsException("L'indice passato non esiste nel grafo o è fuori dai limiti dell'intervallo");
-        }
         return addWeightedEdge(node1, node2, weight);
     }
 
@@ -396,9 +388,6 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
         //noinspection DuplicatedCode
         GraphNode<L> nodo1 = getNode(i);
         GraphNode<L> nodo2 = getNode(j);
-        if (!nodesIndex.containsValue(i) || !nodesIndex.containsValue(j) || i > this.nodeCount() - 1 || j > this.nodeCount() - 1) {
-            throw new IndexOutOfBoundsException("L'indice passato non esiste nel grafo o è fuori dai limiti dell'intervallo");
-        }
         removeEdge(new GraphEdge<>(nodo1, nodo2, true));
     }
 
@@ -416,7 +405,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
         int indice = nodesIndex.get(nodo1);
         ArrayList<GraphEdge<L>> listaArchi = matrix.get(indice);
         for (GraphEdge<L> arco : listaArchi) {
-            if (arco.equals(edge)) {
+            if (arco != null && arco.equals(edge)) {
                 return arco;
             }
         }
@@ -439,7 +428,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
         }
         GraphNode<L> nodo1 = getNode(label1);
         GraphNode<L> nodo2 = getNode(label2);
-        return getEdge(new GraphEdge<>(nodo1, nodo2, true));
+        return getEdge(nodo1, nodo2);
     }
 
     @Override
@@ -447,11 +436,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
         //noinspection DuplicatedCode
         GraphNode<L> nodo1 = getNode(i);
         GraphNode<L> nodo2 = getNode(j);
-        if (!nodesIndex.containsValue(i) || !nodesIndex.containsValue(j) || i > this.nodeCount() - 1 || j > this.nodeCount() - 1) {
-            throw new IndexOutOfBoundsException("L'indice passato non esiste nel grafo o è fuori dai limiti dell'intervallo");
-        }
-
-        return getEdge(new GraphEdge<>(nodo1, nodo2, true));
+        return getEdge(nodo1, nodo2);
     }
 
     @Override
@@ -489,11 +474,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public Set<GraphNode<L>> getAdjacentNodesOf(int i) {
-        //noinspection DuplicatedCode
         GraphNode<L> nodo1 = getNode(i);
-        if (!nodesIndex.containsValue(i) || i > this.nodeCount() - 1) {
-            throw new IndexOutOfBoundsException("L'indice passato non esiste nel grafo o è fuori dai limiti dell'intervallo");
-        }
         return getAdjacentNodesOf(nodo1);
     }
 
@@ -532,11 +513,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public Set<GraphNode<L>> getPredecessorNodesOf(int i) {
-        //noinspection DuplicatedCode
         GraphNode<L> nodo1 = getNode(i);
-        if (!nodesIndex.containsValue(i) || i > this.nodeCount() - 1) {
-            throw new IndexOutOfBoundsException("L'indice passato non esiste nel grafo o è fuori dai limiti dell'intervallo");
-        }
         return getPredecessorNodesOf(nodo1);
     }
 
@@ -568,7 +545,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public Set<GraphEdge<L>> getEdgesOf(int i) {
-        if (!nodesIndex.containsValue(i) || i > this.nodeCount() - 1) {
+        if (i < 0 || i > this.nodeCount() || !nodesIndex.containsValue(i)) {
             throw new IndexOutOfBoundsException("L'indice passato non esiste nel grafo o è fuori dai limiti dell'intervallo");
         }
         GraphNode<L> nodo = getNode(i);
@@ -602,7 +579,7 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
 
     @Override
     public Set<GraphEdge<L>> getIngoingEdgesOf(int i) {
-        if (!nodesIndex.containsValue(i) || i > this.nodeCount() - 1) {
+        if (i < 0 || i > this.nodeCount() || !nodesIndex.containsValue(i)) {
             throw new IndexOutOfBoundsException("L'indice passato non esiste nel grafo o è fuori dai limiti dell'intervallo");
         }
         GraphNode<L> nodo = getNode(i);

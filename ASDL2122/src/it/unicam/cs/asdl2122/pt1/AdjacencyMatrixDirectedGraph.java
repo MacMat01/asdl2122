@@ -3,10 +3,12 @@
  */
 package it.unicam.cs.asdl2122.pt1;
 
-import java.lang.reflect.Array;
-import java.util.*;
-
-// TODO completare gli import necessari
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 // ATTENZIONE: è vietato includere import a pacchetti che non siano della Java SE
 

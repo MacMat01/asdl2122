@@ -399,26 +399,26 @@ public class AdjacencyMatrixDirectedGraph<L> extends Graph<L> {
         }
         GraphNode<L> nodo1 = edge.getNode1();
         GraphNode<L> nodo2 = edge.getNode2();
-        if (!nodesIndex.containsKey(nodo1) || !nodesIndex.containsKey(nodo2)) {
-            throw new IllegalArgumentException("Almeno uno dei due nodi dell'arco passato non esiste nel grafo");
-        }
-        int indice = nodesIndex.get(nodo1);
-        ArrayList<GraphEdge<L>> listaArchi = matrix.get(indice);
-        for (GraphEdge<L> arco : listaArchi) {
-            if (arco != null && arco.equals(edge)) {
-                return arco;
-            }
-        }
-        //Null se l'arco non esiste
-        return null;
+        return getEdge(nodo1, nodo2);
     }
 
     @Override
     public GraphEdge<L> getEdge(GraphNode<L> node1, GraphNode<L> node2) {
         if (node1 == null || node2 == null) {
-            throw new NullPointerException("Almeno uno dei due nodi passati è null");
+            throw new NullPointerException("Almeno uno dei due nodi è null");
         }
-        return getEdge(new GraphEdge<>(node1, node2, true));
+        if (!nodesIndex.containsKey(node1) || !nodesIndex.containsKey(node2)) {
+            throw new IllegalArgumentException("Almeno uno dei due nodi dell'arco passato non esiste nel grafo");
+        }
+        int indice = nodesIndex.get(node1);
+        ArrayList<GraphEdge<L>> listaArchi = matrix.get(indice);
+        for (GraphEdge<L> arco : listaArchi) {
+            if (arco != null && arco.getNode1().equals(node1) && arco.getNode2().equals(node2)) {
+                return arco;
+            }
+        }
+        //Null se l'arco non esiste
+        return null;
     }
 
     @Override

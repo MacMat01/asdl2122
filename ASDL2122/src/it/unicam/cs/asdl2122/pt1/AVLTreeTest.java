@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package it.unicam.cs.asdl2122.pt1;
 
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 /**
  * Classe di test per AVLTree.
- * 
+ *
  * @author Luca Tesei
  *
  */
@@ -28,8 +28,7 @@ public class AVLTreeTest {
 
     @Test
     public final void testAVLTreeENull() {
-        assertThrows(NullPointerException.class,
-                () -> new AVLTree<Integer>(null));
+        assertThrows(NullPointerException.class, () -> new AVLTree<Integer>(null));
     }
 
     @Test
@@ -480,8 +479,7 @@ public class AVLTreeTest {
     public final void testGetPredecessorIllegal() {
         AVLTree<Integer> t = new AVLTree<Integer>(40);
         t.insert(20);
-        assertThrows(IllegalArgumentException.class,
-                () -> t.getPredecessor(25));
+        assertThrows(IllegalArgumentException.class, () -> t.getPredecessor(25));
     }
 
     @Test

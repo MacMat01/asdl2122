@@ -6,14 +6,11 @@ import java.util.List;
  * Un AVLTree è un albero binario di ricerca che si mantiene sempre bilanciato.
  * In questa particolare classe si possono inserire elementi ripetuti di tipo
  * {@code E} e non si possono inserire elementi {@code null}.
- * 
- * @author Luca Tesei (Template)
- * 
- * @param E
- *              il tipo degli elementi che possono essere inseriti in questo
- *              AVLTree. La classe {@code E} deve avere un ordinamento naturale
- *              definito tra gli elementi.
  *
+ * @param E il tipo degli elementi che possono essere inseriti in questo
+ *          AVLTree. La classe {@code E} deve avere un ordinamento naturale
+ *          definito tra gli elementi.
+ * @author Luca Tesei (Template)
  */
 public class AVLTree<E extends Comparable<E>> {
 
@@ -31,24 +28,28 @@ public class AVLTree<E extends Comparable<E>> {
      * Costruisce un AVLTree vuoto.
      */
     public AVLTree() {
-        // TODO implementare
+        root = null;
+        size = 0;
     }
 
     /**
      * Costruisce un AVLTree che consiste solo di un nodo radice.
-     * 
-     * @param rootElement
-     *                        l'informazione associata al nodo radice
-     * @throws NullPointerException
-     *                                  se l'elemento passato è null
+     *
+     * @param rootElement l'informazione associata al nodo radice
+     * @throws NullPointerException se l'elemento passato è null
      */
     public AVLTree(E rootElement) {
-        // TODO implementare
+        if (rootElement == null) {
+            throw new NullPointerException("L'elemento passato è null");
+        }
+        root = new AVLTreeNode(rootElement);
+        size = 1;
+        numberOfNodes = 1;
     }
 
     /**
      * Determina se questo AVLTree è vuoto.
-     * 
+     *
      * @return true, se questo AVLTree è vuoto.
      */
     public boolean isEmpty() {
@@ -58,9 +59,9 @@ public class AVLTree<E extends Comparable<E>> {
     /**
      * Restituisce il numero di elementi contenuti in questo AVLTree. In caso di
      * elementi ripetuti essi vengono contati più volte.
-     * 
+     *
      * @return il numero di elementi di tipo {@code E} presenti in questo
-     *         AVLTree.
+     * AVLTree.
      */
     public int getSize() {
         return this.size;
@@ -68,7 +69,7 @@ public class AVLTree<E extends Comparable<E>> {
 
     /**
      * Restituisce il numero di nodi in questo AVLTree.
-     * 
+     *
      * @return il numero di nodi in questo AVLTree.
      */
     public int getNumberOfNodes() {
@@ -78,11 +79,13 @@ public class AVLTree<E extends Comparable<E>> {
     /**
      * Restituisce l'altezza di questo AVLTree. Se questo AVLTree è vuoto viene
      * restituito il valore -1.
-     * 
+     *
      * @return l'altezza di questo AVLTree, -1 se questo AVLTree è vuoto.
      */
     public int getHeight() {
-        // TODO implementare
+        if (root == null) {
+            return -1;
+        }
         return 0;
     }
 
@@ -94,8 +97,7 @@ public class AVLTree<E extends Comparable<E>> {
     }
 
     /**
-     * @param root
-     *                 the root to set
+     * @param root the root to set
      */
     public void setRoot(AVLTreeNode root) {
         this.root = root;
@@ -106,9 +108,9 @@ public class AVLTree<E extends Comparable<E>> {
      * i nodi hanno un fattore di bilanciamento compreso tra -1 e +1. Il fattore
      * di bilanciamento di un nodo si definisce come l'altezza del sottoalbero
      * sinistro meno l'altezza del sottoalbero destro.
-     * 
+     *
      * @return true, se il fattore di bilanciamento di tutti i nodi dell'albero
-     *         è compreso tra -1 e +1.
+     * è compreso tra -1 e +1.
      */
     public boolean isBalanced() {
         // TODO implementare e usare il metodo corrispondente in AVLTreeNode
@@ -118,13 +120,11 @@ public class AVLTree<E extends Comparable<E>> {
     /**
      * Inserisce un nuovo elemento in questo AVLTree. Se l'elemento è già
      * presente viene incrementato il suo numero di occorrenze.
-     * 
-     * @param el
-     *               l'elemento da inserire.
+     *
+     * @param el l'elemento da inserire.
      * @return il numero di confronti tra elementi della classe {@code E}
-     *         effettuati durante l'inserimento
-     * @throws NullPointerException
-     *                                  se l'elemento {@code el} è null
+     * effettuati durante l'inserimento
+     * @throws NullPointerException se l'elemento {@code el} è null
      */
     public int insert(E el) {
         // TODO implementare e usare il metodo corrispondente in AVLTreeNode
@@ -133,13 +133,11 @@ public class AVLTree<E extends Comparable<E>> {
 
     /**
      * Determina se questo AVLTree contiene un certo elemento.
-     * 
-     * @param el
-     *               l'elemento da cercare
+     *
+     * @param el l'elemento da cercare
      * @return true se l'elemento è presente in questo AVLTree, false
-     *         altrimenti.
-     * @throws NullPointerException
-     *                                  se l'elemento {@code el} è null
+     * altrimenti.
+     * @throws NullPointerException se l'elemento {@code el} è null
      */
     public boolean contains(E el) {
         // TODO implementare e usare il metodo corrispondente (search) in
@@ -150,15 +148,12 @@ public class AVLTree<E extends Comparable<E>> {
     /**
      * Determina se un elemento è presente in questo AVLTree e ne restituisce il
      * relativo nodo.
-     * 
-     * @param el
-     *               l'elemento da cercare
+     *
+     * @param el l'elemento da cercare
      * @return il nodo di questo AVLTree che contiene l'elemento {@code el} e la
-     *         sua molteplicità, oppure {@code null} se l'elemento {@code el}
-     *         non è presente in questo AVLTree.
-     * @throws NullPointerException
-     *                                  se l'elemento {@code el} è null
-     * 
+     * sua molteplicità, oppure {@code null} se l'elemento {@code el}
+     * non è presente in questo AVLTree.
+     * @throws NullPointerException se l'elemento {@code el} è null
      */
     public AVLTreeNode getNodeOf(E el) {
         // TODO implementare e usare il metodo corrispondente (search) in
@@ -168,13 +163,11 @@ public class AVLTree<E extends Comparable<E>> {
 
     /**
      * Determina il numero di occorrenze di un certo elemento in questo AVLTree.
-     * 
-     * @param el
-     *               l'elemento di cui determinare il numero di occorrenze
+     *
+     * @param el l'elemento di cui determinare il numero di occorrenze
      * @return il numero di occorrenze dell'elemento {@code el} in questo
-     *         AVLTree, zero se non è presente.
-     * @throws NullPointerException
-     *                                  se l'elemento {@code el} è null
+     * AVLTree, zero se non è presente.
+     * @throws NullPointerException se l'elemento {@code el} è null
      */
     public int getCount(E el) {
         // TODO implementare e usare il metodo corrispondente in AVLTreeNode
@@ -183,13 +176,12 @@ public class AVLTree<E extends Comparable<E>> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
-        String descr = "AVLTree [root=" + root.el.toString() + ", size=" + size
-                + ", numberOfNodes=" + numberOfNodes + "]\n";
+        String descr = "AVLTree [root=" + root.el.toString() + ", size=" + size + ", numberOfNodes=" + numberOfNodes + "]\n";
         return descr + this.root.toString();
     }
 
@@ -199,9 +191,9 @@ public class AVLTree<E extends Comparable<E>> {
      * AVL la lista ottenuta conterrà gli elementi in ordine crescente rispetto
      * all'ordinamento naturale della classe {@code E}. Nel caso di elementi
      * ripetuti, essi appaiono più volte nella lista consecutivamente.
-     * 
+     *
      * @return la lista ordinata degli elementi contenuti in questo AVLTree,
-     *         tenendo conto della loro molteplicità.
+     * tenendo conto della loro molteplicità.
      */
     public List<E> inOrderVisit() {
         // TODO implementare e usare il metodo corrispondente in AVLTreeNode
@@ -210,9 +202,9 @@ public class AVLTree<E extends Comparable<E>> {
 
     /**
      * Restituisce l'elemento minimo presente in questo AVLTree.
-     * 
+     *
      * @return l'elemento minimo in questo AVLTree, {@code null} se questo
-     *         AVLTree è vuoto.
+     * AVLTree è vuoto.
      */
     public E getMinimum() {
         // TODO implementare e usare il metodo corrispondente in AVLTreeNode
@@ -221,9 +213,9 @@ public class AVLTree<E extends Comparable<E>> {
 
     /**
      * Restituisce l'elemento massimo presente in questo AVLTree.
-     * 
+     *
      * @return l'elemento massimo in questo AVLTree, {@code null} se questo
-     *         AVLTree è vuoto.
+     * AVLTree è vuoto.
      */
     public E getMaximum() {
         // TODO implementare e usare il metodo corrispondente in AVLTreeNode
@@ -234,18 +226,15 @@ public class AVLTree<E extends Comparable<E>> {
      * Restituisce l'elemento <b>strettamente</b> successore, in questo AVLTree,
      * di un dato elemento. Si richiede che l'elemento passato sia presente
      * nell'albero.
-     * 
-     * @param el
-     *               l'elemento di cui si chiede il successore
+     *
+     * @param el l'elemento di cui si chiede il successore
      * @return l'elemento <b>strettamente</b> successore, rispetto
-     *         all'ordinamento naturale della classe {@code E}, di {@code el} in
-     *         questo AVLTree, oppure {@code null} se {@code el} è l'elemento
-     *         massimo.
-     * @throws NullPointerException
-     *                                      se l'elemento {@code el} è null
-     * @throws IllegalArgumentException
-     *                                      se l'elemento {@code el} non è
-     *                                      presente in questo AVLTree.
+     * all'ordinamento naturale della classe {@code E}, di {@code el} in
+     * questo AVLTree, oppure {@code null} se {@code el} è l'elemento
+     * massimo.
+     * @throws NullPointerException     se l'elemento {@code el} è null
+     * @throws IllegalArgumentException se l'elemento {@code el} non è
+     *                                  presente in questo AVLTree.
      */
     public E getSuccessor(E el) {
         // TODO implementare e usare il metodo corrispondente in AVLTreeNode
@@ -256,18 +245,15 @@ public class AVLTree<E extends Comparable<E>> {
      * Restituisce l'elemento <b>strettamente</b> predecessore, in questo
      * AVLTree, di un dato elemento. Si richiede che l'elemento passato sia
      * presente nell'albero.
-     * 
-     * @param el
-     *               l'elemento di cui si chiede il predecessore
+     *
+     * @param el l'elemento di cui si chiede il predecessore
      * @return l'elemento <b>strettamente</b> predecessore rispetto
-     *         all'ordinamento naturale della classe {@code E}, di {@code el} in
-     *         questo AVLTree, oppure {@code null} se {@code el} è l'elemento
-     *         minimo.
-     * @throws NullPointerException
-     *                                      se l'elemento {@code el} è null
-     * @throws IllegalArgumentException
-     *                                      se l'elemento {@code el} non è
-     *                                      presente in questo AVLTree.
+     * all'ordinamento naturale della classe {@code E}, di {@code el} in
+     * questo AVLTree, oppure {@code null} se {@code el} è l'elemento
+     * minimo.
+     * @throws NullPointerException     se l'elemento {@code el} è null
+     * @throws IllegalArgumentException se l'elemento {@code el} non è
+     *                                  presente in questo AVLTree.
      */
     public E getPredecessor(E el) {
         // TODO implementare e usare il metodo corrispondente in AVLTreeNode
@@ -277,9 +263,8 @@ public class AVLTree<E extends Comparable<E>> {
     /**
      * Gli elementi di questa classe sono i nodi di un AVLTree, che è la classe
      * "involucro" della struttura dati.
-     * 
-     * @author Luca Tesei (Template)
      *
+     * @author Luca Tesei (Template)
      */
     public class AVLTreeNode {
         // etichetta del nodo
@@ -302,9 +287,8 @@ public class AVLTree<E extends Comparable<E>> {
 
         /**
          * Create an AVLTreeNode as a root leaf
-         * 
-         * @param el
-         *               the element
+         *
+         * @param el the element
          */
         public AVLTreeNode(E el) {
             this.el = el;
@@ -318,11 +302,9 @@ public class AVLTree<E extends Comparable<E>> {
         /**
          * Create an AVLTreeNode node containing one element to be considered
          * child of the given parent.
-         * 
-         * @param el
-         *                   the element
-         * @param parent
-         *                   the parent of the node
+         *
+         * @param el     the element
+         * @param parent the parent of the node
          */
         public AVLTreeNode(E el, AVLTreeNode parent) {
             this.el = el;
@@ -337,32 +319,36 @@ public class AVLTree<E extends Comparable<E>> {
          * Restituisce il nodo predecessore di questo nodo. Si suppone che
          * esista un nodo predecessore, cioè che questo nodo non contenga
          * l'elemento minimo del sottoalbero di cui è radice.
-         * 
+         *
          * @return il nodo predecessore
          */
         public AVLTreeNode getPredecessor() {
-            // TODO implementare
-            return null;
+            return parent;
         }
 
         /**
          * Restituisce il nodo successore di questo nodo. Si suppone che esista
          * un nodo successore, cioè che questo nodo non contenga l'elemento
          * massimo del sottoalbero di cui è radice.
-         * 
+         *
          * @return il nodo successore
          */
         public AVLTreeNode getSuccessor() {
-            // TODO implementare
+            if (right == null && left != null) {
+                return left;
+            } else if (right != null && left == null) {
+                return right;
+            }
+            // null se non ha successori
             return null;
         }
 
         /**
          * Restituisce il nodo contenente l'elemento massimo del sottoalbero di
          * cui questo nodo è radice.
-         * 
+         *
          * @return il nodo contenente l'elemento massimo del sottoalbero di cui
-         *         questo nodo è radice.
+         * questo nodo è radice.
          */
         public AVLTreeNode getMaximum() {
             // TODO implementare
@@ -372,9 +358,9 @@ public class AVLTree<E extends Comparable<E>> {
         /**
          * Restituisce il nodo contenente l'elemento minimo del sottoalbero di
          * cui questo nodo è radice.
-         * 
+         *
          * @return il nodo contenente l'elemento minimo del sottoalbero di cui
-         *         questo nodo è radice.
+         * questo nodo è radice.
          */
         public AVLTreeNode getMinimum() {
             // TODO implementare
@@ -383,7 +369,7 @@ public class AVLTree<E extends Comparable<E>> {
 
         /**
          * Determina se questo è un nodo foglia.
-         * 
+         *
          * @return true se questo nodo non ha figli, false altrimenti.
          */
         public boolean isLeaf() {
@@ -393,7 +379,7 @@ public class AVLTree<E extends Comparable<E>> {
 
         /**
          * Restituisce l'altezza del sottoalbero la cui radice è questo nodo.
-         * 
+         *
          * @return l'altezza del sotto albero la cui radice è questo nodo.
          */
         public int getHeight() {
@@ -417,7 +403,7 @@ public class AVLTree<E extends Comparable<E>> {
          * moltiplicata per -1. Se il nodo ha entrambi i figli il fattore di
          * bilanciamento è l'altezza del figlio sinistro meno l'altezza del
          * figlio destro.
-         * 
+         *
          * @return il fattore di bilanciamento di questo nodo.
          */
         public int getBalanceFactor() {
@@ -428,9 +414,9 @@ public class AVLTree<E extends Comparable<E>> {
         /**
          * Determina se questo nodo e tutti i suoi discendenti hanno un fattore
          * di bilanciamento compreso tra -1 e 1.
-         * 
+         *
          * @return true se questo nodo e tutti i suoi discendenti sono
-         *         bilanciati, false altrimenti.
+         * bilanciati, false altrimenti.
          */
         public boolean isBalanced() {
             // TODO implementare
@@ -445,8 +431,7 @@ public class AVLTree<E extends Comparable<E>> {
         }
 
         /**
-         * @param el
-         *               the el to set
+         * @param el the el to set
          */
         public void setEl(E el) {
             this.el = el;
@@ -460,8 +445,7 @@ public class AVLTree<E extends Comparable<E>> {
         }
 
         /**
-         * @param count
-         *                  the count to set
+         * @param count the count to set
          */
         public void setCount(int count) {
             this.count = count;
@@ -475,8 +459,7 @@ public class AVLTree<E extends Comparable<E>> {
         }
 
         /**
-         * @param left
-         *                 the left to set
+         * @param left the left to set
          */
         public void setLeft(AVLTreeNode left) {
             this.left = left;
@@ -490,8 +473,7 @@ public class AVLTree<E extends Comparable<E>> {
         }
 
         /**
-         * @param right
-         *                  the right to set
+         * @param right the right to set
          */
         public void setRight(AVLTreeNode right) {
             this.right = right;
@@ -505,16 +487,14 @@ public class AVLTree<E extends Comparable<E>> {
         }
 
         /**
-         * @param parent
-         *                   the parent to set
+         * @param parent the parent to set
          */
         public void setParent(AVLTreeNode parent) {
             this.parent = parent;
         }
 
         /**
-         * @param height
-         *                   the height to set
+         * @param height the height to set
          */
         public void setHeight(int height) {
             this.height = height;
@@ -522,7 +502,7 @@ public class AVLTree<E extends Comparable<E>> {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see java.lang.Object#toString()
          */
         @Override
@@ -531,27 +511,21 @@ public class AVLTree<E extends Comparable<E>> {
             s.append("(");
             s.append(this.el);
             s.append(", ");
-            if (this.left == null)
-                s.append("()");
-            else
-                s.append(this.left.toString());
+            if (this.left == null) s.append("()");
+            else s.append(this.left.toString());
             s.append(", ");
-            if (this.right == null)
-                s.append("()");
-            else
-                s.append(this.right.toString());
+            if (this.right == null) s.append("()");
+            else s.append(this.right.toString());
             s.append(")");
             return s.toString();
         }
 
         /**
          * Ricerca un elemento a partire da questo nodo.
-         * 
-         * @param el
-         *               the element to search for
-         * 
+         *
+         * @param el the element to search for
          * @return the node containing the element or null if the element is not
-         *         found
+         * found
          */
         public AVLTreeNode search(E el) {
             // TODO implementare
@@ -565,12 +539,10 @@ public class AVLTree<E extends Comparable<E>> {
          * posizione e poi procede al ribilanciamento dell'albero se
          * l'inserimento del nuovo nodo provoca uno sbilanciamento in almeno un
          * nodo.
-         * 
-         * @param el
-         *               l'elemento da inserire
-         * 
+         *
+         * @param el l'elemento da inserire
          * @return il numero di confronti tra elementi della classe {@code E}
-         *         effettuati durante l'inserimento.
+         * effettuati durante l'inserimento.
          */
         public int insert(E el) {
             // TODO implementare
